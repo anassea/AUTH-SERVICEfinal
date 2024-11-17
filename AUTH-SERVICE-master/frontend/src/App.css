@@ -1,0 +1,126 @@
+/* App.css */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #87CEEB, #FFB6C1);
+  color: #333;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: transparent;
+  padding: 20px;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  color: #4F46E5;
+  animation: fadeIn 1s ease-out;
+}
+
+.app-header nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.app-header nav ul li a {
+  color: #4F46E5;
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.app-header nav ul li a:hover {
+  color: #3B3BBE;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+h1, h2 {
+  color: #4F46E5;
+  margin-bottom: 20px;
+}
+
+.message {
+  color: #10B981;
+}
+
+form {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  animation: formSlideIn 0.5s ease-out;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  border-color: #4F46E5;
+  outline: none;
+}
+
+button {
+  background-color: #4F46E5;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3B3BBE;
+}
+
+.otp-form, .signup-form {
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes formSlideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
