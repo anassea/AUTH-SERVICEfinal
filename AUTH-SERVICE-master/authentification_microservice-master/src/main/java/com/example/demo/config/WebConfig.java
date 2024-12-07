@@ -14,7 +14,7 @@ public class WebConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // Autoriser React ou le domaine de ton frontend
+        config.addAllowedOrigin("http://localhost:3001"); // Autoriser React ou le domaine de ton frontend
         config.addAllowedMethod("*"); // Autoriser toutes les méthodes HTTP (GET, POST, etc.)
         config.addAllowedHeader("*"); // Autoriser tous les en-têtes
         config.setAllowCredentials(true); // Autoriser les cookies, si nécessaire
