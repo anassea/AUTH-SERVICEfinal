@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #C0DED6, #E7FBF7); /* Fond doux */
+  color: #2E3B34; /* Texte plus foncé pour améliorer le contraste */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #4D595F; /* Couleur de la barre supérieure */
+  padding: 15px;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  color: #0C5844; /* Vert contrasté */
+  animation: fadeIn 1s ease-out;
+}
+
+.app-header nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.app-header nav ul li a {
+  color: #0C5844;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app-header nav ul li a:hover {
+  background-color: #0C5844;
+  color: #FFFFFF;
+}
+
+/* Section principale pour centrer les formulaires */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: 100%; /* Assurez-vous que l'élément prenne toute la hauteur disponible */
+}
+
+h1, h2 {
+  color: #0C5844;
+  margin-bottom: 20px;
+}
+
+.message {
+  color: #556166;
+}
+
+form {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
+  animation: formSlideIn 0.5s ease-out;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #98ABA9;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  border-color: #0C5844;
+  outline: none;
+}
+
+button {
+  background-color: #0C5844;
+  color: #FFFFFF;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #091922;
+}
+
+.otp-form, .signup-form {
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes formSlideIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 2rem;
+  }
+
+  .app-header nav ul {
+    gap: 10px;
+  }
+
+  form {
+    padding: 20px;
+  }
+}
