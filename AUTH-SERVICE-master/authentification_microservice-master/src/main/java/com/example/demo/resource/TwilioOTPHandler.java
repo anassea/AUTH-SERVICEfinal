@@ -58,4 +58,10 @@ public class TwilioOTPHandler {
                 .flatMap(response -> ServerResponse.status(HttpStatus.OK)
                         .body(BodyInserters.fromValue(response)));
     }
+    public Mono<ServerResponse> logout(ServerRequest serverRequest) {
+        String userName = serverRequest.pathVariable("userName");
+        return service.logout(userName)
+                .flatMap(response -> ServerResponse.status(HttpStatus.OK)
+                        .body(BodyInserters.fromValue(response)));
+    }
 }

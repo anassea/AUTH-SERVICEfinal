@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import com.example.demo.dto.PasswordResetWithOTPRequestDto;
+
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +21,7 @@ public class TwilioOTPService {
 
     private Map<String, String> otpMap = new HashMap<>();
     private Map<String, String> userOtpMap = new HashMap<>();
+    private Map<String, String> userSessionMap = new HashMap<>();
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -32,7 +33,7 @@ public class TwilioOTPService {
     public Mono<String> signUp(SignUpRequestDto signUpRequestDto) {
         String otp = generateOTP();
         otpMap.put(signUpRequestDto.getPhoneNumber(), otp);
-        return Mono.just("Sign-up OTP: " + otp);  // Retourne l'OTP directement
+        return Mono.just("Sign-up OTP: " + otp);
     }
 
     public Mono<String> validateOTPForSignUp(ValidateOtpRequestDto validateOtpRequestDto) {
@@ -62,7 +63,12 @@ public class TwilioOTPService {
         if (user != null && passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             String otp = generateOTP();
             userOtpMap.put(user.getUserName(), otp);
-            return Mono.just("Login OTP: " + otp);  // Retourne l'OTP pour la connexion
+
+            if (loginRequestDto.isRememberMe()) {
+                userSessionMap.put(user.getUserName(), otp);
+            }
+
+            return Mono.just("Login OTP: " + otp);
         } else {
             return Mono.error(new IllegalArgumentException("Invalid credentials."));
         }
@@ -71,47 +77,31 @@ public class TwilioOTPService {
     public Mono<String> forgotPassword(PasswordResetRequestDto passwordResetRequestDto) {
         String otp = generateOTP();
         otpMap.put(passwordResetRequestDto.getPhoneNumber(), otp);
-        return Mono.just("Password reset OTP: " + otp);  // Retourne l'OTP pour la réinitialisation du mot de passe
+        return Mono.just("Password reset OTP: " + otp);
     }
 
-    public Mono<String> verifySignUpOTP(ValidateOtpRequestDto validateOtpRequestDto) {
-        String storedOtp = otpMap.get(validateOtpRequestDto.getPhoneNumber());
-
-        if (storedOtp != null && storedOtp.equals(validateOtpRequestDto.getOtp())) {
-            otpMap.remove(validateOtpRequestDto.getPhoneNumber());
-            return Mono.just("OTP verification successful. Proceed with sign-up.");
-        } else {
-            return Mono.error(new IllegalArgumentException("Invalid OTP. Please try again."));
-        }
-    }
     public Mono<String> resetPasswordWithOTP(PasswordResetWithOTPRequestDto passwordResetWithOTPRequestDto) {
         String storedOtp = otpMap.get(passwordResetWithOTPRequestDto.getPhoneNumber());
 
         if (storedOtp != null && storedOtp.equals(passwordResetWithOTPRequestDto.getOtp())) {
-            otpMap.remove(passwordResetWithOTPRequestDto.getPhoneNumber()); // Supprimer l'OTP après vérification
+            otpMap.remove(passwordResetWithOTPRequestDto.getPhoneNumber());
 
-            // Vérifier que les mots de passe correspondent
             if (!passwordResetWithOTPRequestDto.getNewPassword().equals(passwordResetWithOTPRequestDto.getConfirmPassword())) {
                 return Mono.error(new IllegalArgumentException("New password and confirmation do not match."));
             }
 
-            // Trouver l'utilisateur par son numéro de téléphone
             User user = userRepository.findByPhoneNumber(passwordResetWithOTPRequestDto.getPhoneNumber())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found.")); // Utilisation de orElseThrow()
-
-            // Mettre à jour le mot de passe de l'utilisateur
+                    .orElseThrow(() -> new IllegalArgumentException("User not found."));
             user.setPassword(passwordEncoder.encode(passwordResetWithOTPRequestDto.getNewPassword()));
-            userRepository.save(user); // Sauvegarder le nouvel mot de passe
+            userRepository.save(user);
             return Mono.just("Password successfully reset.");
         } else {
             return Mono.error(new IllegalArgumentException("Invalid OTP. Please try again."));
         }
     }
 
-
     public Mono<String> verifyLoginOTP(ValidateOtpRequestDto validateOtpRequestDto) {
         String storedOtp = userOtpMap.get(validateOtpRequestDto.getUserName());
-
         if (storedOtp != null && storedOtp.equals(validateOtpRequestDto.getOtp())) {
             userOtpMap.remove(validateOtpRequestDto.getUserName());
             return Mono.just("OTP verification successful. You are now logged in.");
@@ -119,4 +109,16 @@ public class TwilioOTPService {
             return Mono.error(new IllegalArgumentException("Invalid OTP. Please try again."));
         }
     }
+
+    public Mono<String> logout(String userName) {
+        if (userSessionMap.containsKey(userName)) {
+            userSessionMap.remove(userName);
+            System.out.println("User session found and removed: " + userName);
+            return Mono.just("User logged out successfully.");
+        } else {
+            System.out.println("No active session for user: " + userName);
+            return Mono.error(new IllegalArgumentException("No active session for user."));
+        }
+    }
+
 }

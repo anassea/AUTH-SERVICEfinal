@@ -21,6 +21,7 @@ public class TwilioRouterConfig {
                 .POST("/router/login", handler::login)
                 .POST("/router/validateLoginOTP", handler::validateLoginOTP)
                 .POST("/router/resetPasswordWithOTP", handler::resetPasswordWithOTP)
+                .POST("/router/logout/{userName}", handler::logout)
                 .POST("/router/forgotPassword", handler::forgotPassword)
                 .build();
     }
